@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link rel="stylesheet" th:href="@{/css/citystyle.css}">
+</head>
+<body onclick="aa()" style="background-color:powderblue;color:orange">
+
+<audio id="myaudio"  controls autoplay loop>
+<source th:src="@{/images/feilong.mp3}" type="audio/mpeg">
+</audio>
+<br>
+<!-- <dialog id="dd" >-->
+<!--<form>-->
+<input id="name" type="text" placeholder="請輸入名稱">
+<input id="password" type="text" placeholder="請輸入代碼">
+
+<button id="regbtn"> 註冊</button>
+<!-- </form>-->
+
+<!--<form method="dialog">-->
+<button id="close"> 登入</button>
+<button id="logout"> 登出</button>
+<br>
+<p id="p2" ></p>
+<!-- </form> -->
+<!-- </dialog>-->
+<br>
+<h1> <p id="p1" ></p> </h1>
+<br>
+
+<div id="div1"></div>
+<br>
+<div id="div22"></div><br>
+<div id="div33"></div><br>
+<div id="div44"></div><br>
+
+<button id="list1">出單</button>
+<scan id="listcard" style="color:black"></scan>
+<br>
+<div id="div55">
+<form action="/chatroom" method="get">
+<button>照妖鏡</button>
+</form>
+</div>
+<div id="div55">
+<form action="/pay2" method="get">
+<button>結帳</button>
+</form>
+</div>
+<br>
+
+<script type="text/javascript">
+//onload="show0()"
+//let zx=document.getElementById("dd");
+function show0(){
+	 //zx.showModal();
+}
+let name=document.getElementById("name");
+let password0=document.getElementById("password");
+let p1=document.getElementById("p1");
+let regbtn=document.getElementById("regbtn");
+let close=document.getElementById("close");
+let logout=document.getElementById("logout");
+let p2=document.getElementById("p2");
+let jsondata={
+		id:0,
+		username:"",
+		password: "",
+		};
+let jsondata0="";
+let urlString0="../register";
+let urlString1="../login";
+//p1.innerHTML="aa";
+regbtn.onclick =function() {
+	jsondata.username=name.value;
+	jsondata.password=password0.value;
+	jsondata0=JSON.stringify(jsondata);
+	$.ajax(
+	        {
+	            url:urlString0,
+	            type:'POST', //不給 預設為GET
+	            beforeSend:function(xhr){
+	                //帶Request Header Content-Type
+	                xhr.setRequestHeader('Content-Type','application/json');
+	            },
+	            //傳遞JSON String
+	            data:jsondata0,
+	            //成功回呼 Http status 2xx
+	            success:function(data,status,xhr){
+	               // console.log(data);//
+	              p2.innerHTML=data.message+new Date().toString();//data.message;
+	              name.value="成功";
+	              password.value="";
+	              localStorage.setItem("userdata", jsondata0);
+	            },
+	            //失敗回呼 Http status 4xx 5xx
+	            error:function(xhr,status,error){
+	                
+	              //取出錯誤資訊
+	                
+	                console.log(xhr.responseJSON);
+	                p2.innerHTML=xhr.responseJSON.message;
+	                name.value="";
+		            password.value="";
+	            }
+	        }
+	    );
+};
+close.onclick =function() {
+	
+	//p2.innerHTML=val.username.toString()+"加入成功";
+	jsondata.username=name.value;
+	jsondata.password=password0.value;
+	jsondata0=JSON.stringify(jsondata);
+	$.ajax(
+	        {
+	            url:urlString1,
+	            type:'POST', //不給 預設為GET
+	            beforeSend:function(xhr){
+	                //帶Request Header Content-Type
+	                xhr.setRequestHeader('Content-Type','application/json');
+	            },
+	            //傳遞JSON String
+	            data:jsondata0,
+	            //成功回呼 Http status 2xx
+	            success:function(data,status,xhr){
+	               // console.log(data);//
+	              localStorage.setItem("userdata", jsondata0);
+	              let val=localStorage.getItem("userdata");
+	          	  val=JSON.parse(val);
+	              p2.innerHTML=val.username.toString()+data.message;//data.message;
+	              name.value="";
+	              password.value="";
+	              
+	            },
+	            //失敗回呼 Http status 4xx 5xx
+	            error:function(xhr,status,error){
+	                
+	              //取出錯誤資訊
+	                
+	                console.log(xhr.responseJSON);
+	                p2.innerHTML=xhr.responseJSON.message;
+	                name.value="";
+		            password.value="";
+	            }
+	        }
+	    );
+};
+
+logout.onclick =function() {
+	let val=localStorage.getItem("userdata");
+	  val=JSON.parse(val);
+	  val.username="";
+	  val.password="";
+	  let val2=JSON.stringify(val);
+	  localStorage.setItem("userdata", val2);
+	  p2.innerHTML="已登出";
+}
+p1.innerHTML="歡迎光臨商城"+new Date().toString();
+let img={name:"img1",name2:"div2",name3:"div3",name4:"div4",name5:"div5",};
+
+
+let div1=""+`<div id=${img.name2}>
+<img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p1" id="pro1">maxrllo1</p><br><div>
+<button onclick="buy1()" id="pbtn1">+</button><scan id="pn1">0</scan><button >-</button>
+</div></div>`+`<div id=${img.name2}><img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p2" id="pro2">hello2</p>
+<br><div>
+<button onclick="buy2()" id="pbtn2">+</button><scan id="pn2">0</scan><button  >-</button>
+</div></div>`;
+
+
+let div2=""+`<div id=${img.name3}>
+<img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p1" id="pro3">maxrllo3</p>
+<br><div>
+<button onclick="buy3()" id="pbtn3">+</button><scan id="pn3">0</scan><button  >-</button>
+</div></div>`+`<div id=${img.name3}><img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p2">hello4</p></div>`;
+
+
+let div3=""+`<div id=${img.name4}>
+<img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p1">maxrllo5</p></div>`+`<div id=${img.name4}><img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p2">hello6</p></div>`;
+
+
+let div4=""+`<div id=${img.name5}>
+<img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p1">maxrllo7</p></div>`+`<div id=${img.name5}><img  src="http://localhost:8080/images/clock1.png" class=${img.name}>
+<p class="p2">hello8</p></div>`;
+document.querySelector("#div1").innerHTML +=div1; 
+document.querySelector("#div22").innerHTML +=div2;
+document.querySelector("#div33").innerHTML +=div3;
+document.querySelector("#div44").innerHTML +=div4;
+
+let myaudio=document.getElementById("myaudio");
+function aa(){
+	myaudio.play();
+};
+let list1=document.getElementById("list1");
+let pro1=document.getElementById("pro1");
+let pro2=document.getElementById("pro2");
+let pro3=document.getElementById("pro3");
+let pbtn1=document.getElementById("pbtn1");
+let pbtn2=document.getElementById("pbtn2");
+let pbtn3=document.getElementById("pbtn3");
+let pn1=document.getElementById("pn1");
+let pn2=document.getElementById("pn2");
+let pn3=document.getElementById("pn3");
+let listcard=document.getElementById("listcard");
+let div22=document.getElementById("div2");
+//let i=-1;
+let buy=[];
+let buydata=[{id:0 ,  username:"" ,productname:pro1.innerHTML,number:0,totalprice:0,issold:0,},
+	{id:0 ,  username:"" ,productname:pro2.innerHTML,number:0,totalprice:0,issold:0,},
+	{id:0 ,  username:"" ,productname:pro3.innerHTML,number:0,totalprice:0,issold:0,}];
+let urlString3="../buyproduct";
+let t1=false;
+list1.onclick =function() {
+	for(let i=0;i<buydata.length;i++){
+		if(buydata[i].number!==0){
+			let j=buy.length;
+				buy[j]=buydata[i];
+			
+			t1=true;
+		}
+		if(buy[0]===null){
+			t1=false;
+		}
+	}
+	let jsond3=JSON.stringify(buy);
+	console.log(jsond3);
+	if(buy.length!==0&&t1===true&&buy[0]!==null){
+		console.log(buy.length);
+	$.ajax(
+	        {
+	            url:urlString3,
+	            type:'POST', //不給 預設為GET
+	            beforeSend:function(xhr){
+	                //帶Request Header Content-Type
+	                xhr.setRequestHeader('Content-Type','application/json');
+	            },
+	            //傳遞JSON String
+	            data:jsond3,
+	            //成功回呼 Http status 2xx
+	            success:function(data,status,xhr){
+	               // console.log(data);//
+	              
+	              listcard.innerHTML=data.message;//data.message;
+	              
+	              buy=[];
+	              pn1.innerHTML="0";
+	              pn2.innerHTML="0";
+	              pn3.innerHTML="0";
+	              buydata=[{id:0 ,  username:"" ,productname:pro1.innerHTML,number:0,totalprice:0,issold:0,},
+	            		{id:0 ,  username:"" ,productname:pro2.innerHTML,number:0,totalprice:0,issold:0,},
+	            		{id:0 ,  username:"" ,productname:pro3.innerHTML,number:0,totalprice:0,issold:0,}];
+	              t1=false;
+	            },
+	            //失敗回呼 Http status 4xx 5xx
+	            error:function(xhr,status,error){
+	                
+	              //取出錯誤資訊
+	                
+	                console.log(xhr.responseJSON);
+	                listcard.innerHTML=xhr.responseJSON.message;
+	                
+	            }
+	        }
+	    );
+	}else{
+		listcard.innerHTML="沒貨物";
+		
+	}
+};
+let username3="";
+let productname3="";
+function buy1(){
+	
+	console.log(pro1.innerHTML);
+  let val=localStorage.getItem("userdata");
+	  val=JSON.parse(val);
+	 
+	 //console.log(productname3);
+	 if(pro1.innerHTML!==productname3){
+		 productname3=pro1.innerHTML;
+		 //console.log(buydata1.productname);
+		 
+		 buydata[0].username=val.username.toString();
+		 buydata[0].number=parseInt(pn1.innerHTML)+1;
+		 buydata[0].totalprice=buydata[0].number*100;
+		 buydata[0].issold=0;
+		 pn1.innerHTML=buydata[0].number+"";
+		 //buy0[i]=buydata1;
+		 //console.log(buy0);
+		 //console.log(i);
+		 console.log(productname3+" : "+pro1.innerHTML);
+	 }
+	 else if(pro1.innerHTML===productname3){
+		 buydata[0].number=parseInt(pn1.innerHTML)+1;
+		 buydata[0].totalprice=buydata[0].number*100;
+		 buydata[0].username=val.username.toString();
+		 pn1.innerHTML=buydata[0].number+"";
+		 //buy0[i]=buydata1;
+		 //console.log(buy0);
+		 //console.log(i);
+		 console.log(productname3);
+	 }
+  
+};
+function buy2(){
+	console.log(pro2.innerHTML);
+	  let val=localStorage.getItem("userdata");
+		  val=JSON.parse(val);
+		 
+		 //console.log(productname3);
+		 if(pro2.innerHTML!==productname3){
+			 productname3=pro2.innerHTML;
+			 //console.log(buydata1.productname);
+			 
+			 buydata[1].username=val.username.toString();
+			 buydata[1].number=parseInt(pn2.innerHTML)+1;
+			 buydata[1].totalprice=buydata[1].number*100;
+			 buydata[1].issold=0;
+			 pn2.innerHTML=buydata[1].number+"";
+			 //buy0[i]=buydata1;
+			 //console.log(buy0);
+			 //console.log(i);
+			 console.log(productname3+" : "+pro2.innerHTML);
+		 }
+		 else if(pro2.innerHTML===productname3){
+			 buydata[1].number=parseInt(pn2.innerHTML)+1;
+			 buydata[1].totalprice=buydata[1].number*100;
+			 buydata[1].username=val.username.toString();
+			 pn2.innerHTML=buydata[1].number+"";
+			 //buy0[i]=buydata1;
+			 //console.log(buy0);
+			 //console.log(i);
+			 console.log(productname3);
+		 }
+};
+function buy3(){
+	console.log(pro3.innerHTML);
+	  let val=localStorage.getItem("userdata");
+		  val=JSON.parse(val);
+		 
+		
+		 if(pro3.innerHTML!==productname3){
+			 productname3=pro3.innerHTML;
+			 
+			 
+			 buydata[2].username=val.username.toString();
+			 buydata[2].number=parseInt(pn3.innerHTML)+1;
+			 buydata[2].totalprice=buydata[2].number*100;
+			 buydata[2].issold=0;
+			 pn3.innerHTML=buydata[2].number+"";
+			 console.log(productname3+" : "+pro3.innerHTML);
+		 }
+		 else if(pro3.innerHTML===productname3){
+			 buydata[2].number=parseInt(pn3.innerHTML)+1;
+			 buydata[2].totalprice=buydata[2].number*100;
+			 buydata[2].username=val.username.toString();
+			 pn3.innerHTML=buydata[2].number+"";
+			 console.log(productname3);
+		 }
+};
+</script>
+</body>
+</html>
