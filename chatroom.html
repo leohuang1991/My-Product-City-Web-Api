@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/chat0.css}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+ 
+</head>
+<body>
+ <div id="video-container">
+<!--<video id="inputVideo" alt="在這裡錄影" >Video stream not available.</video>-->
+ </div>
+ <button id="btn1" style="text-align:center">聊天室</button><br>
+ <div id="div1" >
+ <p id="p1"></p>
+ </div>
+ <br>
+ <input type="text" id="text1"> 
+ <button id="btn2" style="text-align:center">寄出</button>
+<script type="text/javascript">
+/*let constraints = {
+		  audio: true,
+		  video: true,
+		};
+		
+let inputVideo = document.querySelector('#inputVideo');
+navigator.mediaDevices.getUserMedia(constraints)
+ .then(function (stream) {
+	 
+	 inputVideo.srcObject = stream;
+	 inputVideo.play();
+
+})
+.catch(function (error) {
+  console.warn('some error occurred' + error)
+});
+*/
+let btn1=document.getElementById("btn1");
+let btn2=document.getElementById("btn2");
+let p1=document.getElementById("p1");
+let text1=document.getElementById("text1");
+
+let ws="/ws";
+let socket =null;
+let stompClient =null;
+let jsondata={
+		code:200,
+		message: "",
+		};
+let jsondata2="";
+btn1.onclick =function() {
+	if(stompClient){
+		stompClient.disconnect();
+	}
+	socket =new SockJS(ws);
+	stompClient =Stomp.over(socket);
+	stompClient.connect({}, function (frame) {
+		
+			stompClient.subscribe("/topic/content", function (response) {
+			console.log("success Max");
+			
+		     let ma=JSON.parse(response.body);
+		     p1.innerHTML+=ma.code+" : "+ma.message+"<br>";
+		},{});
+		
+	},function (){
+		p1.innerHTML="error";
+	});
+};
+
+btn2.onclick =function() {
+	jsondata.message=text1.value;
+	jsondata2=JSON.stringify(jsondata);
+	if(stompClient){
+		
+		stompClient.send("/app/super1",{},jsondata2);
+		
+	}
+};
+</script>
+</body>
+</html>

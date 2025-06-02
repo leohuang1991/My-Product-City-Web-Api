@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script th:src="@{/js/axios.min.js}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link rel="stylesheet" th:href="@{/css/chat0.css}">
+</head>
+<body>
+THE PAY
+<p>user : 產品名 : 數量 :總計  : 付了沒 </p>
+<div id="div1">
+<p id="p1"></p>
+</div>
+<button id="pay">付錢</button><br>
+
+<p id="p2"></p>
+
+<script type="text/javascript">
+let urlString='../../';
+let p3="";
+let p1=document.getElementById("p1");
+let p2=document.getElementById("p2");
+let pay=document.getElementById("pay");
+let buydata1={
+        id:0 ,
+	    
+	    username:"",
+	    
+	    productname:"",
+	    
+	    number:0,
+	    
+	    totalprice:0,
+	    
+	    issold:0,		
+};
+let result=[];
+let val=localStorage.getItem("userdata");
+  val=JSON.parse(val);
+let val2=val.username;
+axios.get(urlString+val2+"/payment")
+//Http status code 200-299
+.then(
+    //Lambda Function
+    (resp)=>{
+        result=resp.data;
+        //console.info('輸入的行政區域:',result);
+        console.log(result); 
+        for(let i=0 ; i<result.length;i++){
+        	p3+=result[i].username+": "+result[i].productname
+        	+": "+result[i].number+" :"
+        	+result[i].totalprice+" :"+result[i].issold+"<br>";
+        }
+        p1.innerHTML = p3;
+    }
+) //success callback
+let urlString1="../payment2/";
+pay.onclick =function() {
+	for(let i=0 ; i<result.length;i++){
+		result[i].issold=1;
+		console.log(i+" :"+result[i].username+"\n"); 
+	}
+	jsondata0=JSON.stringify(result[0]);
+	$.ajax(
+	        {
+	            url:urlString1+val2,
+	            type:'PUT', //不給 預設為GET
+	            beforeSend:function(xhr){
+	                //帶Request Header Content-Type
+	                xhr.setRequestHeader('Content-Type','application/json');
+	            },
+	            //傳遞JSON String
+	            data:jsondata0,
+	            //成功回呼 Http status 2xx
+	            success:function(data,status,xhr){
+	               // console.log(data);//
+	             
+	              p2.innerHTML=data.message;//data.message;
+	              
+	              
+	            },
+	            //失敗回呼 Http status 4xx 5xx
+	            error:function(xhr,status,error){
+	                
+	              //取出錯誤資訊
+	                
+	                console.log(xhr.responseJSON);
+	                p2.innerHTML=xhr.responseJSON.message;
+	                
+	            }
+	        }
+	    );
+};
+</script>
+</body>
+</html>
